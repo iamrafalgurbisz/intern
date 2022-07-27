@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useMemo } from 'react'
+import { Layout, Sidebar } from '@/components'
+import '@/styles/_global.scss'
+import { useNotes } from '@/hooks'
+import NotesContext from './context/notesContext'
+import NotesPanel from './components/NotesPanel'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const { notes, addNote } = useNotes()
+
+    const notesContextValue = useMemo(
+        () => ({
+            notes,
+            addNote,
+        }),
+        [notes, addNote]
+    )
+
+    useEffect(() => {
+        console.log(notes)
+    }, [notes])
+
+    return (
+        <NotesContext.Provider value={notesContextValue}>
+            <Layout>
+                <Sidebar />
+                <NotesPanel />
+            </Layout>
+        </NotesContext.Provider>
+    )
 }
 
-export default App;
+export default App
